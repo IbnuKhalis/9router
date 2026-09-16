@@ -1,0 +1,29 @@
+services:
+  9router:
+    image: decolua/9router:latest
+    container_name: 9router
+    restart: always
+    expose:
+      - "20128"
+    volumes:
+      - 9router_data:/app/data
+    env_file:
+      - .env
+    environment:
+      DATA_DIR: /app/data
+      PORT: "20128"
+      HOSTNAME: "0.0.0.0"
+      REQUIRE_API_KEY: "true"
+      AUTH_COOKIE_SECURE: "true"
+      BASE_URL: "https://router.digitalneeds.my.id"
+      NEXT_PUBLIC_BASE_URL: "https://router.digitalneeds.my.id"
+    networks:
+      - proxy-network
+
+volumes:
+  9router_data:
+    name: 9router_vps_data
+
+networks:
+  proxy-network:
+    external: true
