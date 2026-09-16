@@ -2,7 +2,7 @@
 
 > **Proyek**: 9Router AI Model Gateway & Token Optimizer  
 > **Jalur Eksekusi**: **Lokal (Windows Docker)** ➔ **VPS Produksi (Oracle Cloud ARM64 + Caddy)**  
-> **Status Master**: `FASE 0: INISIASI & BASELINE` 🟢 | `FASE 1: SETUP LOKAL` 🟡  
+> **Status Master**: `FASE 0: INISIASI & BASELINE` 🟢 | `FASE 1: SETUP LOKAL` 🟢 | `FASE 2: REGISTRASI PROVIDER` 🟡  
 > **Terakhir Diperbarui**: 2026-09-16
 
 ---
@@ -22,10 +22,10 @@
 ## 📊 Matriks Progres Proyek
 
 | Fase | Deskripsi | Lingkungan | Status |
-| :--- | :--- | :--- | :---: |
+| :--- | :--- | :--- | :--- |
 | **Fase 0** | Inisiasi Repositori & Panduan Operasional | Lokal | 🟢 SELESAI |
-| **Fase 1** | Konfigurasi & Setup Docker Lokal | Lokal Windows | 🟡 SIAP DIEKSEKUSI |
-| **Fase 2** | Akses Dashboard & Registrasi Provider Model | Lokal Windows | ⚪ MENUNGGU |
+| **Fase 1** | Konfigurasi & Setup Docker Lokal | Lokal Windows | 🟢 SELESAI |
+| **Fase 2** | Akses Dashboard & Registrasi Provider Model | Lokal Windows | 🟡 SIAP DIEKSEKUSI |
 | **Fase 3** | Uji Coba RTK Token Saver & Smart Fallback | Lokal Windows | ⚪ MENUNGGU |
 | **Fase 4** | Integrasi Tool Koding Workstation (Cursor/Claude/Antigravity) | Lokal Windows | ⚪ MENUNGGU |
 | **Fase 5** | Persiapan & Hardening Deployment VPS (ARM64) | VPS Persiapan | ⚪ MENUNGGU |
@@ -57,29 +57,29 @@
 
 ---
 
-### 🟡 Fase 1: Setup & Konfigurasi Docker Lokal (Windows)
+### 🟢 Fase 1: Setup & Konfigurasi Docker Lokal (Windows)
 > **Tujuan**: Menjalankan 9Router secara stabil di Windows menggunakan Docker Desktop sebelum menyentuh VPS.
 
-- [ ] Pastikan Docker Desktop di Windows berjalan:
+- [x] Pastikan Docker Desktop di Windows berjalan:
   ```powershell
   Start-Process "C:\Program Files\Docker\Docker\Docker Desktop.exe"
   # Tunggu engine siap, lalu cek:
   docker info
   ```
-- [ ] Inisialisasi berkas konfigurasi `.env` dan direktori data persisten (lihat [`directives/local-setup.md`](directives/local-setup.md)):
+- [x] Inisialisasi berkas konfigurasi `.env` dan direktori data persisten (lihat [`directives/local-setup.md`](directives/local-setup.md)):
   ```powershell
   .\execution\init-env.ps1
   ```
   *Skrip ini otomatis menghasilkan JWT_SECRET acak, password login dashboard yang aman, serta membuat folder `data/` dan `data/.9router/`.*
-- [ ] Jalankan container 9Router lokal:
+- [x] Jalankan container 9Router lokal:
   ```powershell
   docker compose up -d
   ```
-- [ ] Periksa log container untuk memastikan database SQLite dan service aktif:
+- [x] Periksa log container untuk memastikan database SQLite dan service aktif:
   ```powershell
   docker compose logs -f 9router
   ```
-- [ ] Verifikasi diagnostik otomatis:
+- [x] Verifikasi diagnostik otomatis:
   ```powershell
   .\execution\test-connection.ps1
   ```
