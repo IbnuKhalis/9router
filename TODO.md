@@ -25,8 +25,8 @@
 | :--- | :--- | :--- | :--- |
 | **Fase 0** | Inisiasi Repositori & Panduan Operasional | Lokal | 🟢 SELESAI |
 | **Fase 1** | Konfigurasi & Setup Docker Lokal | Lokal Windows | 🟢 SELESAI |
-| **Fase 2** | Akses Dashboard & Registrasi Provider Model | Lokal Windows | 🟡 SIAP DIEKSEKUSI |
-| **Fase 3** | Uji Coba RTK Token Saver & Smart Fallback | Lokal Windows | ⚪ MENUNGGU |
+| **Fase 2** | Akses Dashboard & Registrasi Provider Model | Lokal Windows | 🟢 SELESAI |
+| **Fase 3** | Uji Coba RTK Token Saver & Smart Fallback | Lokal Windows | 🟡 SEDANG BERJALAN |
 | **Fase 4** | Integrasi Tool Koding Workstation (Cursor/Claude/Antigravity) | Lokal Windows | ⚪ MENUNGGU |
 | **Fase 5** | Persiapan & Hardening Deployment VPS (ARM64) | VPS Persiapan | ⚪ MENUNGGU |
 | **Fase 6** | Deployment VPS & Konfigurasi Caddy SSL | VPS Produksi | ⚪ MENUNGGU |
@@ -86,35 +86,30 @@
 
 ---
 
-### ⚪ Fase 2: Akses Dashboard & Registrasi Provider Model AI
+### 🟢 Fase 2: Akses Dashboard & Registrasi Provider Model AI
 > **Tujuan**: Membuka dashboard 9Router dan menghubungkan model-model AI gratis/berbayar.
 
-- [ ] Akses Web UI Dashboard via browser: `http://localhost:20128`
-- [ ] Login menggunakan kredensial yang dihasilkan oleh `init-env.ps1` (atau password default `123456` jika `INITIAL_PASSWORD` tidak diset).
-- [ ] Daftarkan Provider Model Gratis (Zero Cost AI Coding):
-  - [ ] **Kiro AI**: Claude 4.5, GLM-5, MiniMax (kuota gratis bulanan)
-  - [ ] **OpenCode Free**: Model gratis terotomasi tanpa autentikasi
-  - [ ] **Google Vertex AI / Gemini Studio**: Masukkan API key Gemini gratis
-- [ ] Daftarkan Provider Berbayar / Langganan (Opsional):
-  - [ ] Anthropic Claude API Key / Claude Code OAuth
-  - [ ] OpenAI API Key
-  - [ ] DeepSeek API Key
-  - [ ] OpenRouter API Key
-- [ ] Buat Master API Key di menu **API Keys** Dashboard 9Router dan simpan untuk pengujian CLI.
+- [x] Akses Web UI Dashboard via browser: `http://localhost:20128`
+- [x] Login menggunakan kredensial yang dihasilkan oleh `init-env.ps1`.
+- [x] Daftarkan Provider Model:
+  - [x] **DeepSeek API**: Terhubung (`ds/deepseek-chat`, `ds/deepseek-reasoner`)
+  - [ ] Provider model gratis tambahan (Kiro AI, OpenCode Free, Google Gemini Studio - opsional)
+- [x] Dapatkan / Buat API Key di menu **API Keys** Dashboard 9Router (`sk-ddf6835827e78365-btohmo-d9664340`).
 
 ---
 
-### ⚪ Fase 3: Uji Coba RTK Token Saver & Smart Fallback
+### 🟡 Fase 3: Uji Coba RTK Token Saver & Smart Fallback
 > **Tujuan**: Membuktikan bahwa 9Router dapat memproses request LLM dan menghemat token.
 
-- [ ] Uji diagnostik koneksi model terdaftar (lihat [`directives/connection-test.md`](directives/connection-test.md)):
+- [x] Uji diagnostik koneksi model terdaftar (lihat [`directives/connection-test.md`](directives/connection-test.md)):
   ```powershell
-  .\execution\test-connection.ps1 -ApiKey "<MASTER_API_KEY>"
+  .\execution\test-connection.ps1 -ApiKey "sk-ddf6835827e78365-btohmo-d9664340"
   ```
-- [ ] Uji pengiriman prompt chat completion:
+- [x] Uji pengiriman prompt chat completion:
   ```powershell
-  .\execution\test-connection.ps1 -ApiKey "<MASTER_API_KEY>" -Model "auto" -SendChatPrompt
+  .\execution\test-connection.ps1 -ApiKey "sk-ddf6835827e78365-btohmo-d9664340" -Model "ds/deepseek-chat" -SendChatPrompt
   ```
+  *Status: Berhasil respons streaming via DeepSeek dalam 801ms - 1035ms.*
 - [ ] Uji efektivitas **RTK Token Saver**:
   - Kirimkan context berukuran besar (misal git diff panjang atau output file).
   - Amati persentase kompresi token yang tercatat pada dashboard 9Router (ekspektasi 20% - 40% penghematan).
