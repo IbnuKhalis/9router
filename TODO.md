@@ -94,7 +94,7 @@
 - [x] Daftarkan Provider Model:
   - [x] **DeepSeek API**: Terhubung (`ds/deepseek-chat`, `ds/deepseek-reasoner`)
   - [ ] Provider model gratis tambahan (Kiro AI, OpenCode Free, Google Gemini Studio - opsional)
-- [x] Dapatkan / Buat API Key di menu **API Keys** Dashboard 9Router (`sk-ddf6835827e78365-btohmo-d9664340`).
+- [x] Dapatkan / Buat API Key di menu **API Keys** Dashboard 9Router (simpan key ini dengan aman).
 
 ---
 
@@ -103,11 +103,11 @@
 
 - [x] Uji diagnostik koneksi model terdaftar (lihat [`directives/connection-test.md`](directives/connection-test.md)):
   ```powershell
-  .\execution\test-connection.ps1 -ApiKey "sk-ddf6835827e78365-btohmo-d9664340"
+  .\execution\test-connection.ps1 -ApiKey "<YOUR_9ROUTER_API_KEY>"
   ```
 - [x] Uji pengiriman prompt chat completion:
   ```powershell
-  .\execution\test-connection.ps1 -ApiKey "sk-ddf6835827e78365-btohmo-d9664340" -Model "ds/deepseek-chat" -SendChatPrompt
+  .\execution\test-connection.ps1 -ApiKey "<YOUR_9ROUTER_API_KEY>" -Model "ds/deepseek-chat" -SendChatPrompt
   ```
   *Status: Berhasil respons streaming via DeepSeek dalam 801ms - 1035ms.*
 - [ ] Uji efektivitas **RTK Token Saver**:
