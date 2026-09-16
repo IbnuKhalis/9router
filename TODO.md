@@ -36,17 +36,23 @@
 
 ## 📋 Rincian Langkah & Checklist
 
-### 🟢 Fase 0: Inisiasi Repositori & Baseline Lingkungan
-- [x] Buat berkas panduan operasional agen [`agent.md`](file:///d:/Antigravity/9router/agent.md)
-- [x] Buat cermin [`AGENTS.md`](file:///d:/Antigravity/9router/AGENTS.md) untuk kompatibilitas multi-agent
+### 🟢 Fase 0: Inisiasi Repositori & Baseline Lingkungan (Sesuai Agent Instructions.md)
+- [x] Siapkan operating rules agen [`Agent Instructions.md`](file:///d:/Antigravity/9router/Agent%20Instructions.md) & cermin multi-agent ([`AGENTS.md`](file:///d:/Antigravity/9router/AGENTS.md), [`CLAUDE.md`](file:///d:/Antigravity/9router/CLAUDE.md), [`GEMINI.md`](file:///d:/Antigravity/9router/GEMINI.md))
+- [x] Buat konteks proyek `docs/`: Product Requirements Document [`docs/PRD.md`](file:///d:/Antigravity/9router/docs/PRD.md) & System Architecture [`docs/architecture.md`](file:///d:/Antigravity/9router/docs/architecture.md)
+- [x] Buat prosedur SOP `directives/`:
+  - [x] Local Setup SOP [`directives/local-setup.md`](file:///d:/Antigravity/9router/directives/local-setup.md)
+  - [x] Production VPS Deployment SOP [`directives/vps-deployment.md`](file:///d:/Antigravity/9router/directives/vps-deployment.md)
+  - [x] Connection & API Diagnostics SOP [`directives/connection-test.md`](file:///d:/Antigravity/9router/directives/connection-test.md)
+  - [x] GitHub Push & Version Control SOP [`directives/github-push.md`](file:///d:/Antigravity/9router/directives/github-push.md)
 - [x] Buat master roadmap [`TODO.md`](file:///d:/Antigravity/9router/TODO.md)
 - [x] Inisialisasi Git repositori lokal (`git init`)
 - [x] Buat berkas [`.gitignore`](file:///d:/Antigravity/9router/.gitignore) (abaikan `.env`, data volume, log)
 - [x] Buat berkas template konfigurasi [`.env.example`](file:///d:/Antigravity/9router/.env.example)
 - [x] Buat berkas konfigurasi [`docker-compose.yml`](file:///d:/Antigravity/9router/docker-compose.yml) (Lokal Windows, dual volume `/app/data` + `/root/.9router`)
 - [x] Buat berkas konfigurasi [`docker-compose.vps.yml`](file:///d:/Antigravity/9router/docker-compose.vps.yml) (VPS Oracle Cloud ARM64)
-- [x] Buat skrip otomatisasi inisialisasi lingkungan [`.scripts/init-env.ps1`](file:///d:/Antigravity/9router/scripts/init-env.ps1) (Aman UTF-8 No BOM)
-- [x] Buat skrip diagnostik endpoint [`.scripts/test-connection.ps1`](file:///d:/Antigravity/9router/scripts/test-connection.ps1)
+- [x] Buat skrip eksekusi deterministik `execution/`:
+  - [x] Inisialisasi lingkungan [`execution/init-env.ps1`](file:///d:/Antigravity/9router/execution/init-env.ps1) (Aman UTF-8 No BOM)
+  - [x] Diagnostik endpoint [`execution/test-connection.ps1`](file:///d:/Antigravity/9router/execution/test-connection.ps1)
 - [x] Buat alur kerja CI/CD GitHub Actions [`.github/workflows/deploy.yml`](file:///d:/Antigravity/9router/.github/workflows/deploy.yml)
 
 ---
@@ -60,9 +66,9 @@
   # Tunggu engine siap, lalu cek:
   docker info
   ```
-- [ ] Inisialisasi berkas konfigurasi `.env` dan direktori data persisten:
+- [ ] Inisialisasi berkas konfigurasi `.env` dan direktori data persisten (lihat [`directives/local-setup.md`](file:///d:/Antigravity/9router/directives/local-setup.md)):
   ```powershell
-  .\scripts\init-env.ps1
+  .\execution\init-env.ps1
   ```
   *Skrip ini otomatis menghasilkan JWT_SECRET acak, password login dashboard yang aman, serta membuat folder `data/` dan `data/.9router/`.*
 - [ ] Jalankan container 9Router lokal:
@@ -75,7 +81,7 @@
   ```
 - [ ] Verifikasi diagnostik otomatis:
   ```powershell
-  .\scripts\test-connection.ps1
+  .\execution\test-connection.ps1
   ```
 
 ---
@@ -101,13 +107,13 @@
 ### ⚪ Fase 3: Uji Coba RTK Token Saver & Smart Fallback
 > **Tujuan**: Membuktikan bahwa 9Router dapat memproses request LLM dan menghemat token.
 
-- [ ] Uji diagnostik koneksi model terdaftar:
+- [ ] Uji diagnostik koneksi model terdaftar (lihat [`directives/connection-test.md`](file:///d:/Antigravity/9router/directives/connection-test.md)):
   ```powershell
-  .\scripts\test-connection.ps1 -ApiKey "<MASTER_API_KEY>"
+  .\execution\test-connection.ps1 -ApiKey "<MASTER_API_KEY>"
   ```
 - [ ] Uji pengiriman prompt chat completion:
   ```powershell
-  .\scripts\test-connection.ps1 -ApiKey "<MASTER_API_KEY>" -Model "auto" -SendChatPrompt
+  .\execution\test-connection.ps1 -ApiKey "<MASTER_API_KEY>" -Model "auto" -SendChatPrompt
   ```
 - [ ] Uji efektivitas **RTK Token Saver**:
   - Kirimkan context berukuran besar (misal git diff panjang atau output file).
@@ -184,11 +190,11 @@
   ```powershell
   ssh vps-main "docker exec caddy-proxy caddy reload --config /etc/caddy/Caddyfile"
   ```
-- [ ] Uji endpoint publik HTTPS:
+- [ ] Uji endpoint publik HTTPS (lihat [`directives/vps-deployment.md`](file:///d:/Antigravity/9router/directives/vps-deployment.md)):
   - Buka browser: `https://router.digitalneeds.my.id`
   - Uji cURL HTTPS:
     ```powershell
-    .\scripts\test-connection.ps1 -BaseUrl "https://router.digitalneeds.my.id" -ApiKey "<VPS_API_KEY>"
+    .\execution\test-connection.ps1 -BaseUrl "https://router.digitalneeds.my.id" -ApiKey "<VPS_API_KEY>"
     ```
 
 ---
@@ -217,5 +223,5 @@
 | **DEC-04** | 2026-09-16 | Git Source of Truth | Deployment via CI/CD | Menegakkan prinsip tidak mengubah kode/compose langsung di VPS; semua perubahan diuji lokal dan di-push ke GitHub. |
 | **DEC-05** | 2026-09-16 | Data Persistence | Dual-Volume (`/app/data` + `/root/.9router`) | 9Router menyimpan konfigurasi SQLite di `/app/data`, namun telemetri token dan request logs disimpan di `/root/.9router`. Kedua volume wajib dipetakan agar tidak terjadi kehilangan data saat container di-restart. |
 | **DEC-06** | 2026-09-16 | Caddy TLS Invariant | Wajib `tls internal` | Mencegah Cloudflare Error 525 (SSL Handshake Failed) saat Cloudflare Proxy dalam mode Full; origin TLS diterbitkan instan oleh internal CA Caddy. |
-| **DEC-07** | 2026-09-16 | Skrip Otomasi & Encoding | PowerShell UTF-8 No BOM | Mencegah kerusakan encoding karakter (UTF-8 BOM dan CRLF) saat membaca `.env` di Linux container; diotomasi melalui `scripts/init-env.ps1`. |
+| **DEC-07** | 2026-09-16 | Skrip Otomasi & Encoding | PowerShell UTF-8 No BOM | Mencegah kerusakan encoding karakter (UTF-8 BOM dan CRLF) saat membaca `.env` di Linux container; diotomasi melalui `execution/init-env.ps1`. |
 

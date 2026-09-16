@@ -60,7 +60,7 @@ try {
     $StatusCode = $_.Exception.Response.StatusCode.value__
     if ($StatusCode -eq 401) {
         Write-Host " [PROTECTED] (HTTP 401 Unauthorized)" -ForegroundColor Yellow
-        Write-Host "      Endpoint ini memerlukan API Key. Jalankan dengan: .\scripts\test-connection.ps1 -ApiKey 'sk-...'" -ForegroundColor Yellow
+        Write-Host "      Endpoint ini memerlukan API Key. Jalankan dengan: .\execution\test-connection.ps1 -ApiKey 'sk-...'" -ForegroundColor Yellow
     } else {
         Write-Host " [FAILED] (HTTP $StatusCode)" -ForegroundColor Red
         Write-Host "      Pesan Error: $($_.Exception.Message)" -ForegroundColor DarkRed
