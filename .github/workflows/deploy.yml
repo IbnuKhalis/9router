@@ -1,0 +1,49 @@
+name: Deploy 9Router to VPS
+
+on:
+  push:
+    branches:
+      - main
+  workflow_dispatch:
+
+jobs:
+  deploy:
+    name: Deploy to Production VPS (Oracle Cloud ARM64)
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout Repository
+        uses: actions/checkout@v4
+
+      - name: Deploy via SSH
+        uses: appleboy/ssh-action@v1.2.0
+        with:
+          host: ${{ secrets.VPS_HOST }}
+          username: ${{ secrets.VPS_USERNAME }}
+          key: ${{ secrets.VPS_SSH_KEY }}
+          port: ${{ secrets.VPS_PORT }}
+          script: |
+            set -e
+            echo "=== [1/4] Sinkronisasi Kode Git ke VPS ==="
+            # Pastikan folder project ada di /opt/projects/9router
+            if [ ! -d "/opt/projects/9router" ]; then
+              echo "Folder /opt/projects/9router belum ada. Menyiapkan clone awal..."
+              sudo mkdir -p /opt/projects/9router
+              sudo chown -R ubuntu:ubuntu /opt/projects/9router
+              git clone https://github.com/IbnuKhalis/9router.git /opt/projects/9router
+            fi
+
+            cd /opt/projects/9router
+            git fetch origin main
+            git reset --hard origin/main
+
+            echo "=== [2/4] Menjalankan Container 9Router ARM64 ==="
+            docker compose -f docker-compose.vps.yml pull
+            docker compose -f docker-compose.vps.yml up -d --remove-orphans
+
+            echo "=== [3/4] Memuat Ulang Konfigurasi Reverse Proxy Caddy ==="
+            docker exec caddy-proxy caddy reload --config /etc/caddy/Caddyfile
+
+            echo "=== [4/4] Verifikasi Healthcheck Internal ==="
+            sleep 3
+            docker compose -f docker-compose.vps.yml ps
+            echo "Deploy 9Router selesai dengan sukses!"

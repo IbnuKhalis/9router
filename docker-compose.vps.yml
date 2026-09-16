@@ -7,8 +7,10 @@ services:
       - "20128"
     volumes:
       - 9router_data:/app/data
+      - 9router_root:/root/.9router
     env_file:
-      - .env
+      - path: .env
+        required: false
     environment:
       DATA_DIR: /app/data
       PORT: "20128"
@@ -17,13 +19,27 @@ services:
       AUTH_COOKIE_SECURE: "true"
       BASE_URL: "https://router.digitalneeds.my.id"
       NEXT_PUBLIC_BASE_URL: "https://router.digitalneeds.my.id"
+      # HEADROOM_URL: http://headroom:8787
     networks:
       - proxy-network
+
+  # Optional VPS sidecar token optimizer (Headroom)
+  # headroom:
+  #   image: ghcr.io/chopratejas/headroom:latest
+  #   container_name: 9router-headroom
+  #   restart: always
+  #   expose:
+  #     - "8787"
+  #   networks:
+  #     - proxy-network
 
 volumes:
   9router_data:
     name: 9router_vps_data
+  9router_root:
+    name: 9router_vps_root
 
 networks:
   proxy-network:
     external: true
+

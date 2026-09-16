@@ -7,9 +7,26 @@ services:
       - "20128:20128"
     volumes:
       - ./data:/app/data
+      - ./data/.9router:/root/.9router
     env_file:
-      - .env
+      - path: .env
+        required: false
     environment:
       DATA_DIR: /app/data
       PORT: "20128"
       HOSTNAME: "0.0.0.0"
+      JWT_SECRET: ${JWT_SECRET:-9router-local-dev-jwt-secret-change-me}
+      INITIAL_PASSWORD: ${INITIAL_PASSWORD:-123456}
+      REQUIRE_API_KEY: ${REQUIRE_API_KEY:-false}
+      BASE_URL: ${BASE_URL:-http://localhost:20128}
+      # HEADROOM_URL: http://headroom:8787
+
+  # Optional sidecar token optimizer (Headroom)
+  # Uncomment service below if you wish to run deep token compression locally
+  # headroom:
+  #   image: ghcr.io/chopratejas/headroom:latest
+  #   container_name: 9router-headroom
+  #   restart: unless-stopped
+  #   ports:
+  #     - "8787:8787"
+
