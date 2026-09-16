@@ -40,9 +40,11 @@
 - [x] Buat berkas panduan operasional agen [`agent.md`](file:///d:/Antigravity/9router/agent.md)
 - [x] Buat cermin [`AGENTS.md`](file:///d:/Antigravity/9router/AGENTS.md) untuk kompatibilitas multi-agent
 - [x] Buat master roadmap [`TODO.md`](file:///d:/Antigravity/9router/TODO.md)
-- [ ] Inisialisasi Git repositori lokal (`git init`)
-- [ ] Buat berkas [`.gitignore`](file:///d:/Antigravity/9router/.gitignore) (abaikan `.env`, data volume, log)
-- [ ] Buat berkas template konfigurasi [`.env.example`](file:///d:/Antigravity/9router/.env.example)
+- [x] Inisialisasi Git repositori lokal (`git init`)
+- [x] Buat berkas [`.gitignore`](file:///d:/Antigravity/9router/.gitignore) (abaikan `.env`, data volume, log)
+- [x] Buat berkas template konfigurasi [`.env.example`](file:///d:/Antigravity/9router/.env.example)
+- [x] Buat berkas konfigurasi [`docker-compose.yml`](file:///d:/Antigravity/9router/docker-compose.yml) (Lokal Windows)
+- [x] Buat berkas konfigurasi [`docker-compose.vps.yml`](file:///d:/Antigravity/9router/docker-compose.vps.yml) (VPS Oracle Cloud ARM64)
 
 ---
 
