@@ -2,7 +2,7 @@
 
 > **Proyek**: 9Router AI Model Gateway & Token Optimizer  
 > **Jalur Eksekusi**: **Lokal (Windows Docker)** ➔ **VPS Produksi (Oracle Cloud ARM64 + Caddy)**  
-> **Status Master**: `FASE 0: INISIASI & BASELINE` 🟢 | `FASE 1: SETUP LOKAL` 🟢 | `FASE 2: REGISTRASI PROVIDER` 🟡  
+> **Status Master**: `FASE 0: INISIASI` 🟢 | `FASE 1: LOKAL` 🟢 | `FASE 2: PROVIDER` 🟢 | `FASE 5: HARDENING VPS` 🟢 | `FASE 6: DEPLOYMENT VPS` 🟢  
 > **Terakhir Diperbarui**: 2026-09-16
 
 ---
@@ -28,9 +28,9 @@
 | **Fase 2** | Akses Dashboard & Registrasi Provider Model | Lokal Windows | 🟢 SELESAI |
 | **Fase 3** | Uji Coba RTK Token Saver & Smart Fallback | Lokal Windows | 🟡 SEDANG BERJALAN |
 | **Fase 4** | Integrasi Tool Koding Workstation (Cursor/Claude/Antigravity) | Lokal Windows | ⚪ MENUNGGU |
-| **Fase 5** | Persiapan & Hardening Deployment VPS (ARM64) | VPS Persiapan | ⚪ MENUNGGU |
-| **Fase 6** | Deployment VPS & Konfigurasi Caddy SSL | VPS Produksi | ⚪ MENUNGGU |
-| **Fase 7** | Integrasi Lintas Proyek & Sinkronisasi Second Brain | Ekosistem | ⚪ MENUNGGU |
+| **Fase 5** | Persiapan & Hardening Deployment VPS (ARM64) | VPS Persiapan | 🟢 SELESAI |
+| **Fase 6** | Deployment VPS & Konfigurasi Caddy SSL | VPS Produksi | 🟢 SELESAI |
+| **Fase 7** | Integrasi Lintas Proyek & Sinkronisasi Second Brain | Ekosistem | 🟡 SIAP DIEKSEKUSI |
 
 ---
 
@@ -133,18 +133,18 @@
 
 ---
 
-### ⚪ Fase 5: Persiapan & Hardening Deployment VPS (ARM64)
+### 🟢 Fase 5: Persiapan & Hardening Deployment VPS (ARM64)
 > **Tujuan**: Menyiapkan konfigurasi server produksi yang aman sebelum melakukan deployment ke Oracle Cloud.
 
-- [ ] Verifikasi kompatibilitas image ARM64:
-  - `decolua/9router:latest` mendukung platform `linux/arm64` secara native.
-- [ ] Konfigurasi Docker Compose VPS [`docker-compose.vps.yml`](docker-compose.vps.yml):
+- [x] Verifikasi kompatibilitas image ARM64:
+  - `ghcr.io/decolua/9router:latest` mendukung platform `linux/arm64` secara native.
+- [x] Konfigurasi Docker Compose VPS [`docker-compose.vps.yml`](docker-compose.vps.yml):
   - Terhubung ke Docker bridge eksternal: `proxy-network`
   - Tanpa port mapping publik mentah (`expose: - "20128"` saja).
   - Dual volume persisten: `9router_vps_data:/app/data` dan `9router_vps_root:/root/.9router`.
-- [ ] Konfigurasi DNS Cloudflare:
+- [x] Konfigurasi DNS Cloudflare:
   - DNS Wildcard `*.digitalneeds.my.id` sudah aktif mengarah ke `129.225.1.91` (Proxied).
-- [ ] Tambahkan blok Caddyfile di VPS (`/opt/infrastructure/reverse-proxy/Caddyfile`):
+- [x] Tambahkan blok Caddyfile di VPS (`/opt/infrastructure/reverse-proxy/Caddyfile`):
   ```caddyfile
   router.digitalneeds.my.id {
       tls internal
@@ -159,37 +159,37 @@
       }
   }
   ```
-- [ ] Terapkan mitigasi keamanan CVE-2026-46339:
+- [x] Terapkan mitigasi keamanan CVE-2026-46339:
   - Atur `REQUIRE_API_KEY=true` di lingkungan produksi VPS.
   - Port `20128` terisolasi di dalam `proxy-network`.
 
 ---
 
-### ⚪ Fase 6: Eksekusi Deployment ke VPS & Verifikasi Remote
+### 🟢 Fase 6: Eksekusi Deployment ke VPS & Verifikasi Remote
 > **Tujuan**: Melakukan deployment otomatis ke VPS melalui alur CI/CD GitHub Actions (Git as Single Source of Truth).
 
-- [ ] Buat repositori remote di GitHub (direkomendasikan `--public` tanpa hardcoded secret per standar VPS ops 7.7):
+- [x] Buat repositori remote di GitHub (publik tanpa hardcoded secret per standar VPS ops 7.7):
   ```powershell
   gh repo create IbnuKhalis/9router --public --source=. --remote=origin
   ```
-- [ ] Daftarkan 4 secret deployment VPS menggunakan fungsi PowerShell bawaan:
+- [x] Daftarkan 4 secret deployment VPS menggunakan fungsi PowerShell bawaan:
   ```powershell
   set-vps-secrets 9router
   ```
-- [ ] Push kode ke branch `main`:
+- [x] Push kode ke branch `main`:
   ```powershell
   git push -u origin main
   ```
-- [ ] Pantau pipeline GitHub Actions di [`.github/workflows/deploy.yml`](.github/workflows/deploy.yml) hingga selesai.
-- [ ] Verifikasi reload konfigurasi Caddy di VPS:
+- [x] Pantau pipeline GitHub Actions di [`.github/workflows/deploy.yml`](.github/workflows/deploy.yml) hingga selesai (Pipeline lolos dalam 46s).
+- [x] Verifikasi reload konfigurasi Caddy di VPS:
   ```powershell
   ssh vps-main "docker exec caddy-proxy caddy reload --config /etc/caddy/Caddyfile"
   ```
-- [ ] Uji endpoint publik HTTPS (lihat [`directives/vps-deployment.md`](directives/vps-deployment.md)):
-  - Buka browser: `https://router.digitalneeds.my.id`
+- [x] Uji endpoint publik HTTPS (lihat [`directives/vps-deployment.md`](directives/vps-deployment.md)):
+  - Buka browser: `https://router.digitalneeds.my.id` (HTTP 200 / 307 Redirect ke `/dashboard`)
   - Uji cURL HTTPS:
     ```powershell
-    .\execution\test-connection.ps1 -BaseUrl "https://router.digitalneeds.my.id" -ApiKey "<VPS_API_KEY>"
+    .\execution\test-connection.ps1 -BaseUrl "https://router.digitalneeds.my.id"
     ```
 
 ---
