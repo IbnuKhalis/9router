@@ -15,6 +15,8 @@ param(
 
 $ErrorActionPreference = "Continue"
 
+$BaseUrl = $BaseUrl.TrimEnd('/')
+
 Write-Host "`n=== 9Router Connection & API Diagnostic Tool ===" -ForegroundColor Cyan
 Write-Host "Target Endpoint: $BaseUrl`n" -ForegroundColor DarkGray
 
@@ -57,12 +59,23 @@ try {
         Write-Host "      Endpoint merespons, namun belum ada provider/model yang terhubung di dashboard." -ForegroundColor Yellow
     }
 } catch {
-    $StatusCode = $_.Exception.Response.StatusCode.value__
+    $StatusCode = $null
+    if ($_.Exception.Response) {
+        try {
+            $StatusCode = [int]$_.Exception.Response.StatusCode
+        } catch {
+            $StatusCode = $null
+        }
+    }
+
     if ($StatusCode -eq 401) {
         Write-Host " [PROTECTED] (HTTP 401 Unauthorized)" -ForegroundColor Yellow
         Write-Host "      Endpoint ini memerlukan API Key. Jalankan dengan: .\execution\test-connection.ps1 -ApiKey 'sk-...'" -ForegroundColor Yellow
-    } else {
+    } elseif ($StatusCode) {
         Write-Host " [FAILED] (HTTP $StatusCode)" -ForegroundColor Red
+        Write-Host "      Pesan Error: $($_.Exception.Message)" -ForegroundColor DarkRed
+    } else {
+        Write-Host " [FAILED]" -ForegroundColor Red
         Write-Host "      Pesan Error: $($_.Exception.Message)" -ForegroundColor DarkRed
     }
 }
@@ -91,8 +104,15 @@ if ($SendChatPrompt) {
         $Stopwatch.Stop()
         Write-Host " [OK] ($($Stopwatch.ElapsedMilliseconds)ms)" -ForegroundColor Green
 
-        $Reply = $ChatResp.choices[0].message.content
-        Write-Host "      Respons: $Reply" -ForegroundColor Cyan
+        if ($ChatResp.choices -and $ChatResp.choices.Count -gt 0 -and $ChatResp.choices[0].message) {
+            $Reply = $ChatResp.choices[0].message.content
+            Write-Host "      Respons: $Reply" -ForegroundColor Cyan
+        } else {
+            $RawSummary = ($ChatResp | ConvertTo-Json -Compress)
+            if ($RawSummary.Length -gt 120) { $RawSummary = $RawSummary.Substring(0, 120) + "..." }
+            Write-Host "      Respons diterima: $RawSummary" -ForegroundColor Yellow
+        }
+
         if ($ChatResp.usage) {
             Write-Host "      Token Usage: prompt=$($ChatResp.usage.prompt_tokens), completion=$($ChatResp.usage.completion_tokens), total=$($ChatResp.usage.total_tokens)" -ForegroundColor DarkGray
         }

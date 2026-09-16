@@ -37,23 +37,23 @@
 ## 📋 Rincian Langkah & Checklist
 
 ### 🟢 Fase 0: Inisiasi Repositori & Baseline Lingkungan (Sesuai Agent Instructions.md)
-- [x] Siapkan operating rules agen [`Agent Instructions.md`](file:///d:/Antigravity/9router/Agent%20Instructions.md) & cermin multi-agent ([`AGENTS.md`](file:///d:/Antigravity/9router/AGENTS.md), [`CLAUDE.md`](file:///d:/Antigravity/9router/CLAUDE.md), [`GEMINI.md`](file:///d:/Antigravity/9router/GEMINI.md))
-- [x] Buat konteks proyek `docs/`: Product Requirements Document [`docs/PRD.md`](file:///d:/Antigravity/9router/docs/PRD.md) & System Architecture [`docs/architecture.md`](file:///d:/Antigravity/9router/docs/architecture.md)
+- [x] Siapkan operating rules agen [`Agent Instructions.md`](Agent%20Instructions.md) & cermin multi-agent ([`AGENTS.md`](AGENTS.md), [`CLAUDE.md`](CLAUDE.md), [`GEMINI.md`](GEMINI.md))
+- [x] Buat konteks proyek `docs/`: Product Requirements Document [`docs/PRD.md`](docs/PRD.md) & System Architecture [`docs/architecture.md`](docs/architecture.md)
 - [x] Buat prosedur SOP `directives/`:
-  - [x] Local Setup SOP [`directives/local-setup.md`](file:///d:/Antigravity/9router/directives/local-setup.md)
-  - [x] Production VPS Deployment SOP [`directives/vps-deployment.md`](file:///d:/Antigravity/9router/directives/vps-deployment.md)
-  - [x] Connection & API Diagnostics SOP [`directives/connection-test.md`](file:///d:/Antigravity/9router/directives/connection-test.md)
-  - [x] GitHub Push & Version Control SOP [`directives/github-push.md`](file:///d:/Antigravity/9router/directives/github-push.md)
-- [x] Buat master roadmap [`TODO.md`](file:///d:/Antigravity/9router/TODO.md)
-- [x] Inisialisasi Git repositori lokal (`git init`)
-- [x] Buat berkas [`.gitignore`](file:///d:/Antigravity/9router/.gitignore) (abaikan `.env`, data volume, log)
-- [x] Buat berkas template konfigurasi [`.env.example`](file:///d:/Antigravity/9router/.env.example)
-- [x] Buat berkas konfigurasi [`docker-compose.yml`](file:///d:/Antigravity/9router/docker-compose.yml) (Lokal Windows, dual volume `/app/data` + `/root/.9router`)
-- [x] Buat berkas konfigurasi [`docker-compose.vps.yml`](file:///d:/Antigravity/9router/docker-compose.vps.yml) (VPS Oracle Cloud ARM64)
+  - [x] Local Setup SOP [`directives/local-setup.md`](directives/local-setup.md)
+  - [x] Production VPS Deployment SOP [`directives/vps-deployment.md`](directives/vps-deployment.md)
+  - [x] Connection & API Diagnostics SOP [`directives/connection-test.md`](directives/connection-test.md)
+  - [x] GitHub Push & Version Control SOP [`directives/github-push.md`](directives/github-push.md)
+- [x] Buat master roadmap [`TODO.md`](TODO.md)
+- [x] Inisialisasi Git repositori lokal (`git init` & set branch `main`)
+- [x] Buat berkas [`.gitignore`](.gitignore) (abaikan `.env`, data volume, log)
+- [x] Buat berkas template konfigurasi [`.env.example`](.env.example)
+- [x] Buat berkas konfigurasi [`docker-compose.yml`](docker-compose.yml) (Lokal Windows, dual volume `/app/data` + `/root/.9router`)
+- [x] Buat berkas konfigurasi [`docker-compose.vps.yml`](docker-compose.vps.yml) (VPS Oracle Cloud ARM64)
 - [x] Buat skrip eksekusi deterministik `execution/`:
-  - [x] Inisialisasi lingkungan [`execution/init-env.ps1`](file:///d:/Antigravity/9router/execution/init-env.ps1) (Aman UTF-8 No BOM)
-  - [x] Diagnostik endpoint [`execution/test-connection.ps1`](file:///d:/Antigravity/9router/execution/test-connection.ps1)
-- [x] Buat alur kerja CI/CD GitHub Actions [`.github/workflows/deploy.yml`](file:///d:/Antigravity/9router/.github/workflows/deploy.yml)
+  - [x] Inisialisasi lingkungan [`execution/init-env.ps1`](execution/init-env.ps1) (Aman UTF-8 No BOM)
+  - [x] Diagnostik endpoint [`execution/test-connection.ps1`](execution/test-connection.ps1)
+- [x] Buat alur kerja CI/CD GitHub Actions [`.github/workflows/deploy.yml`](.github/workflows/deploy.yml)
 
 ---
 
@@ -66,7 +66,7 @@
   # Tunggu engine siap, lalu cek:
   docker info
   ```
-- [ ] Inisialisasi berkas konfigurasi `.env` dan direktori data persisten (lihat [`directives/local-setup.md`](file:///d:/Antigravity/9router/directives/local-setup.md)):
+- [ ] Inisialisasi berkas konfigurasi `.env` dan direktori data persisten (lihat [`directives/local-setup.md`](directives/local-setup.md)):
   ```powershell
   .\execution\init-env.ps1
   ```
@@ -107,7 +107,7 @@
 ### ⚪ Fase 3: Uji Coba RTK Token Saver & Smart Fallback
 > **Tujuan**: Membuktikan bahwa 9Router dapat memproses request LLM dan menghemat token.
 
-- [ ] Uji diagnostik koneksi model terdaftar (lihat [`directives/connection-test.md`](file:///d:/Antigravity/9router/directives/connection-test.md)):
+- [ ] Uji diagnostik koneksi model terdaftar (lihat [`directives/connection-test.md`](directives/connection-test.md)):
   ```powershell
   .\execution\test-connection.ps1 -ApiKey "<MASTER_API_KEY>"
   ```
@@ -143,7 +143,7 @@
 
 - [ ] Verifikasi kompatibilitas image ARM64:
   - `decolua/9router:latest` mendukung platform `linux/arm64` secara native.
-- [ ] Konfigurasi Docker Compose VPS [`docker-compose.vps.yml`](file:///d:/Antigravity/9router/docker-compose.vps.yml):
+- [ ] Konfigurasi Docker Compose VPS [`docker-compose.vps.yml`](docker-compose.vps.yml):
   - Terhubung ke Docker bridge eksternal: `proxy-network`
   - Tanpa port mapping publik mentah (`expose: - "20128"` saja).
   - Dual volume persisten: `9router_vps_data:/app/data` dan `9router_vps_root:/root/.9router`.
@@ -173,9 +173,9 @@
 ### ⚪ Fase 6: Eksekusi Deployment ke VPS & Verifikasi Remote
 > **Tujuan**: Melakukan deployment otomatis ke VPS melalui alur CI/CD GitHub Actions (Git as Single Source of Truth).
 
-- [ ] Buat repositori GitHub pribadi `IbnuKhalis/9router` via GitHub CLI:
+- [ ] Buat repositori remote di GitHub (direkomendasikan `--public` tanpa hardcoded secret per standar VPS ops 7.7):
   ```powershell
-  gh repo create IbnuKhalis/9router --private --source=. --remote=origin
+  gh repo create IbnuKhalis/9router --public --source=. --remote=origin
   ```
 - [ ] Daftarkan 4 secret deployment VPS menggunakan fungsi PowerShell bawaan:
   ```powershell
@@ -185,12 +185,12 @@
   ```powershell
   git push -u origin main
   ```
-- [ ] Pantau pipeline GitHub Actions di [`.github/workflows/deploy.yml`](file:///d:/Antigravity/9router/.github/workflows/deploy.yml) hingga selesai.
+- [ ] Pantau pipeline GitHub Actions di [`.github/workflows/deploy.yml`](.github/workflows/deploy.yml) hingga selesai.
 - [ ] Verifikasi reload konfigurasi Caddy di VPS:
   ```powershell
   ssh vps-main "docker exec caddy-proxy caddy reload --config /etc/caddy/Caddyfile"
   ```
-- [ ] Uji endpoint publik HTTPS (lihat [`directives/vps-deployment.md`](file:///d:/Antigravity/9router/directives/vps-deployment.md)):
+- [ ] Uji endpoint publik HTTPS (lihat [`directives/vps-deployment.md`](directives/vps-deployment.md)):
   - Buka browser: `https://router.digitalneeds.my.id`
   - Uji cURL HTTPS:
     ```powershell

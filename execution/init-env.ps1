@@ -9,7 +9,7 @@ param(
 
 $ErrorActionPreference = "Stop"
 
-$RootPath = (Get-Item $PSScriptRoot).Parent.FullName
+$RootPath = if ([string]::IsNullOrWhiteSpace($PSScriptRoot)) { (Get-Location).Path } else { Split-Path -Parent $PSScriptRoot }
 $EnvExamplePath = Join-Path $RootPath ".env.example"
 $EnvPath = Join-Path $RootPath ".env"
 $DataDir = Join-Path $RootPath "data"

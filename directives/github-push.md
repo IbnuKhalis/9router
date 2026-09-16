@@ -40,7 +40,7 @@ Pastikan hanya perubahan yang relevan dengan tugas yang dimodifikasi (hindari re
 ### 3. Stage Berkas Terpilih
 Tambahkan berkas secara eksplisit atau menyeluruh jika seluruh perubahan sudah terverifikasi:
 ```powershell
-git add docs/ directives/ execution/ AGENTS.md TODO.md
+git add docs/ directives/ execution/ AGENTS.md CLAUDE.md GEMINI.md TODO.md .github/ .env.example docker-compose.yml docker-compose.vps.yml
 ```
 
 ### 4. Buat Commit dengan Pesan Deskriptif
@@ -50,11 +50,11 @@ git commit -m "docs: restructure project layout according to Agent Instructions.
 ```
 
 ### 5. Push ke Remote Repository
-Kirimkan commit ke remote repository:
+Kirimkan commit ke remote repository (standar branch: `main`):
 ```powershell
-git push origin master
+# Jika repositori lokal masih di branch master, selaraskan dengan: git branch -M main
+git push -u origin main
 ```
-*(Catatan: Jika branch utama adalah main, sesuaikan target branch).*
 
 ---
 

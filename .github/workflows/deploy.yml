@@ -4,6 +4,7 @@ on:
   push:
     branches:
       - main
+      - master
   workflow_dispatch:
 
 jobs:
@@ -33,8 +34,8 @@ jobs:
             fi
 
             cd /opt/projects/9router
-            git fetch origin main
-            git reset --hard origin/main
+            git fetch origin ${{ github.ref_name }}
+            git reset --hard origin/${{ github.ref_name }}
 
             echo "=== [2/4] Menjalankan Container 9Router ARM64 ==="
             docker compose -f docker-compose.vps.yml pull
