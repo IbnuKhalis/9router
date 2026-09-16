@@ -19,6 +19,8 @@ services:
       AUTH_COOKIE_SECURE: "true"
       BASE_URL: "https://router.digitalneeds.my.id"
       NEXT_PUBLIC_BASE_URL: "https://router.digitalneeds.my.id"
+      JWT_SECRET: ${JWT_SECRET:-9router-vps-jwt-secret-replace-me}
+      INITIAL_PASSWORD: ${INITIAL_PASSWORD:-123456}
       # HEADROOM_URL: http://headroom:8787
     networks:
       - proxy-network

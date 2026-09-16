@@ -24,7 +24,7 @@ jobs:
           port: ${{ secrets.VPS_PORT }}
           script: |
             set -e
-            echo "=== [1/4] Sinkronisasi Kode Git ke VPS ==="
+            echo "=== [1/5] Sinkronisasi Kode Git ke VPS ==="
             # Pastikan folder project ada di /opt/projects/9router
             if [ ! -d "/opt/projects/9router" ]; then
               echo "Folder /opt/projects/9router belum ada. Menyiapkan clone awal..."
@@ -37,14 +37,28 @@ jobs:
             git fetch origin ${{ github.ref_name }}
             git reset --hard origin/${{ github.ref_name }}
 
-            echo "=== [2/4] Menjalankan Container 9Router ARM64 ==="
+            echo "=== [2/5] Inisialisasi Environment .env VPS ==="
+            if [ ! -f ".env" ]; then
+              echo "Membuat konfigurasi .env awal di VPS..."
+              cp .env.example .env
+              JWT_RANDOM=$(openssl rand -base64 32)
+              PASS_RANDOM=$(openssl rand -base64 12 | tr -dc 'a-zA-Z0-9' | fold -w 10 | head -n 1)!9R
+              sed -i "s|JWT_SECRET=.*|JWT_SECRET=$JWT_RANDOM|" .env
+              sed -i "s|INITIAL_PASSWORD=.*|INITIAL_PASSWORD=$PASS_RANDOM|" .env
+              sed -i "s|BASE_URL=.*|BASE_URL=https://router.digitalneeds.my.id|" .env
+              echo "=========================================================="
+              echo " Initial VPS Password: $PASS_RANDOM"
+              echo "=========================================================="
+            fi
+
+            echo "=== [3/5] Menjalankan Container 9Router ARM64 ==="
             docker compose -f docker-compose.vps.yml pull
             docker compose -f docker-compose.vps.yml up -d --remove-orphans
 
-            echo "=== [3/4] Memuat Ulang Konfigurasi Reverse Proxy Caddy ==="
+            echo "=== [4/5] Memuat Ulang Konfigurasi Reverse Proxy Caddy ==="
             docker exec caddy-proxy caddy reload --config /etc/caddy/Caddyfile
 
-            echo "=== [4/4] Verifikasi Healthcheck Internal ==="
+            echo "=== [5/5] Verifikasi Healthcheck Internal ==="
             sleep 3
             docker compose -f docker-compose.vps.yml ps
             echo "Deploy 9Router selesai dengan sukses!"
