@@ -79,3 +79,5 @@ Jalankan diagnostik awal:
    - Jalankan `docker compose down` dan pastikan tidak ada proses container yang tertinggal.
 3. **Lupa Password Awal Dashboard**:
    - Jika belum login, jalankan `.\execution\init-env.ps1 -Force -InitialPassword "passwordBaru123!"` lalu restart container: `docker compose restart 9router`.
+4. **Docker Hub Pull Timeout / CloudFront EOF**:
+   - Jika pull dari Docker Hub gagal dengan `failed to copy: httpReadSeeker: failed open: ... EOF`, gunakan registry resmi GitHub Container Registry (`ghcr.io/decolua/9router:latest`) yang bebas throttling dan terhindar dari pemutusan koneksi CloudFront. Berkas `docker-compose.yml` telah dikonfigurasi menggunakan image GHCR secara default.
