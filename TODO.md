@@ -199,9 +199,14 @@
 
 - [x] Dokumentasi ke Obsidian Second Brain:
   - [x] Buat ringkasan arsitektur di `D:\Apps\Obsidian\SecondBrain\01 Projects\Antigravity\9router\Overview.md`
-  - [x] Tambahkan tips setup dan solusi routing ke `02 Antigravity Core\Solution Library.md` (Solusi #16)
-  - [x] Catat milestone ke jurnal harian `00 Daily/2026-09-16.md`
-  - [x] Verifikasi tautan vault: 160 catatan, 396 tautan terverifikasi (0 broken link, 0 orphan note).
+  - [x] Tambahkan tips setup dan solusi routing ke `02 Antigravity Core\Solution Library.md` (Solusi #16 & Solusi #25)
+  - [x] Catat milestone ke jurnal harian `00 Daily/2026-09-16.md` dan `00 Daily/2026-10-01.md`
+  - [x] Verifikasi tautan vault: 160+ catatan, 400+ tautan terverifikasi.
+- [x] Integrasi Suite Agentic Skills 9Router (Master + 7 Capability Skills):
+  - [x] Pasang 8 skill resmi (`9router`, `chat`, `image`, `tts`, `stt`, `embeddings`, `web-search`, `web-fetch`) ke runtime agen VPS (Dineva / `digitalneeds04-runtime`).
+  - [x] Audit keamanan otomatis lolos via `skills-guard-v7: SAFE & ALLOWED`.
+  - [x] Injeksi environment variable `NINEROUTER_URL` & `NINEROUTER_KEY` ke `/opt/projects/dineva-vps/.env`.
+  - [x] Mirroring direktori berkas skill ke `/opt/projects/9router/skills/` (VPS) dan `skills/` (Workstation Lokal).
 - [ ] Integrasikan 9Router VPS sebagai gateway model bagi proyek lain (On-Demand):
   - **VPS-Monitor-Dashboard**: Ringkasan status server berkala menggunakan model AI hemat token.
   - **Graduance**: Bantuan analisis data atau fitur AI portal.
@@ -220,4 +225,5 @@
 | **DEC-05** | 2026-09-16 | Data Persistence | Dual-Volume (`/app/data` + `/root/.9router`) | 9Router menyimpan konfigurasi SQLite di `/app/data`, namun telemetri token dan request logs disimpan di `/root/.9router`. Kedua volume wajib dipetakan agar tidak terjadi kehilangan data saat container di-restart. |
 | **DEC-06** | 2026-09-16 | Caddy TLS Invariant | Wajib `tls internal` | Mencegah Cloudflare Error 525 (SSL Handshake Failed) saat Cloudflare Proxy dalam mode Full; origin TLS diterbitkan instan oleh internal CA Caddy. |
 | **DEC-07** | 2026-09-16 | Skrip Otomasi & Encoding | PowerShell UTF-8 No BOM | Mencegah kerusakan encoding karakter (UTF-8 BOM dan CRLF) saat membaca `.env` di Linux container; diotomasi melalui `execution/init-env.ps1`. |
+| **DEC-08** | 2026-10-01 | Hermes Skill Identifier Hardening | Prefix `ninerouter` alih-alih `9router` | Parser CLI `hermes skills install` menolak identifier yang diawali angka (`Invalid --name: '9router'`); penggunaan nama `ninerouter` menjamin validasi lolos dan lulus audit keamanan `skills-guard-v7`. |
 
